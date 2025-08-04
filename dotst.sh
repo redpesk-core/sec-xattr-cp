@@ -79,3 +79,4 @@ then
 	echo "ERROR detected in raw ouput"
 	exit 1
 fi
+echo "Test passed succefully"
