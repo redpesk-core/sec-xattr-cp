@@ -89,6 +89,9 @@ bool dump = false;
 bool pattern = false;
 regex_t rex;
 
+/* root device */
+unsigned long rootdev;
+
 /* allocation of memory */
 void *alloc(size_t sz)
 {
@@ -273,6 +276,7 @@ void extr_dir(struct recentry **phead, size_t pos, bool root)
 	struct recentry *subs;
 	DIR *dir;
 	size_t len;
+	struct stat st;
 
 	/* open the directory */
 	dir = opendir(path);
@@ -303,12 +307,18 @@ void extr_dir(struct recentry **phead, size_t pos, bool root)
 
 		/* enter sub directories */
 		if (ent->d_type == DT_DIR && strcmp(ent->d_name, ".") != 0) {
-			subs = NULL;
-			extr_dir(&subs, pos + len, false);
-			/* create the entry only if needed */
-			if (subs != NULL) {
-				path[pos + len] = 0;
-				add_entry(phead, &path[pos], len + 1)->subs = subs;
+			if (stat(path, &st) < 0) {
+				fprintf(stderr, "Can't stat %s: %s\n", path, strerror(errno));
+				exit(EXIT_FAILURE);
+			}
+			if (st.st_dev == rootdev) {
+				subs = NULL;
+				extr_dir(&subs, pos + len, false);
+				/* create the entry only if needed */
+				if (subs != NULL) {
+					path[pos + len] = 0;
+					add_entry(phead, &path[pos], len + 1)->subs = subs;
+				}
 			}
 		}
 	}
@@ -318,7 +328,14 @@ void extr_dir(struct recentry **phead, size_t pos, bool root)
 /* extract from root path rpath */
 void extract(const char *rpth)
 {
+	struct stat st;
 	size_t len = strlen(rpth);
+	int rc = stat(rpth, &st);
+	if (rc < 0) {
+		fprintf(stderr, "Can't stat %s: %s\n", rpth, strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+	rootdev = st.st_dev;
 	addpath(0, rpth, len);
 	extr_dir(&root, len, true);
 }
