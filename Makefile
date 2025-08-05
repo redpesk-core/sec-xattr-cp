@@ -2,8 +2,6 @@
 
 all: sec-xattr-restore sec-xattr-extract
 
-CFLAGS += -O3 -Wl,--strip-all # -static
-
 prefix ?= /usr/local
 exec_prefix ?= $(prefix)
 bindir ?= $(exec_prefix)/bin
