@@ -120,7 +120,7 @@ void wr(int fd, const void *ptr, size_t sz)
 void addpath(size_t pos, const char *str, size_t len)
 {
 	if (pos + len > sizeof path) {
-		fprintf(stderr, "file too long %.*s%.*s\n", pos, path, len, str);
+		fprintf(stderr, "file too long %.*s%.*s\n", (int)pos, path, (int)len, str);
 		exit(EXIT_FAILURE);
 	}
 	memcpy(&path[pos], str, len);
@@ -262,7 +262,7 @@ void extr_entry(struct recentry **phead, size_t pos, size_t len)
 
 		/* record the attribute in the entry */
 		if (dump)
-			printf("%s\t%s\t%.*s\n", path, &lstattr[idx], szval, &valattr[2]);
+			printf("%s\t%s\t%.*s\n", path, &lstattr[idx], (int)szval, &valattr[2]);
 		valattr[0] = (char)(uint8_t)(szval & 255);
 		valattr[1] = (char)(uint8_t)((szval >> 8) & 255);
 		add_attr(&entry->attr, &lstattr[idx], len + 1, valattr, szval + 2);

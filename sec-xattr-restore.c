@@ -53,7 +53,7 @@ int (*apply)(const char *path, const char *name, const void *value, size_t size,
 
 int dry_apply(const char *path, const char *name, const void *value, size_t size, int flags)
 {
-	fprintf(stdout, "%s\t%s\t%.*s\n", path, name, size, (const char*)value);
+	fprintf(stdout, "%s\t%s\t%.*s\n", path, name, (int)size, (const char*)value);
 }
 
 #endif
@@ -70,7 +70,7 @@ void *process(uint32_t *pcode, size_t offset, const char *subpath)
 	/* append the subpath */
 	len = strlen(subpath);
 	if (offset + len > sizeof path) {
-		fprintf(stderr, "path too long %.*s%s\n", offset, path, subpath);
+		fprintf(stderr, "path too long %.*s%s\n", (int)offset, path, subpath);
 		exit(EXIT_FAILURE);
 	}
 	memcpy(&path[offset], subpath, len);
@@ -79,7 +79,7 @@ void *process(uint32_t *pcode, size_t offset, const char *subpath)
 	/* append the trailing slash */
 	if (offset == 0 || path[offset - 1] != '/') {
 		if (offset + 1 > sizeof path) {
-			fprintf(stderr, "path too long %.*s/\n", offset, path);
+			fprintf(stderr, "path too long %.*s/\n", (int)offset, path);
 			exit(EXIT_FAILURE);
 		}
 		path[offset++] = '/';
@@ -99,7 +99,7 @@ void *process(uint32_t *pcode, size_t offset, const char *subpath)
 		case TAG_FILE:
 			len = strlen(str) + 1;
 			if (offset + len > sizeof path) {
-				fprintf(stderr, "path too long %.*s%s\n", offset, path, offset);
+				fprintf(stderr, "path too long %.*s%s\n", (int)offset, path, offset);
 				exit(EXIT_FAILURE);
 			}
 			memcpy(&path[offset], str, len);
