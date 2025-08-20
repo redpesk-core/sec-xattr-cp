@@ -214,7 +214,7 @@ struct recentry *add_entry(struct recentry **phead, const char *str, size_t len)
 void extr_entry(struct recentry **phead, size_t pos, size_t len)
 {
 	struct recentry *entry;
-	size_t szattr, idx, szval;
+	size_t szattr, idx, szval, anlen;
 	ssize_t rc;
 
 	/* get the list of attributes */
@@ -235,10 +235,10 @@ void extr_entry(struct recentry **phead, size_t pos, size_t len)
 
 	/* iterate the attributes */
 	entry = NULL;
-	for (idx = 0 ; idx < szattr ; idx += len + 1) {
+	for (idx = 0 ; idx < szattr ; idx += anlen + 1) {
 
 		/* check the attribute name */
-		len = strlen(&lstattr[idx]);
+		anlen = strlen(&lstattr[idx]);
 		if (pattern && regexec(&rex, &lstattr[idx], 0, NULL, 0))
 			continue;
 
@@ -265,7 +265,7 @@ void extr_entry(struct recentry **phead, size_t pos, size_t len)
 			printf("%s\t%s\t%.*s\n", path, &lstattr[idx], (int)szval, &valattr[2]);
 		valattr[0] = (char)(uint8_t)(szval & 255);
 		valattr[1] = (char)(uint8_t)((szval >> 8) & 255);
-		add_attr(&entry->attr, &lstattr[idx], len + 1, valattr, szval + 2);
+		add_attr(&entry->attr, &lstattr[idx], anlen + 1, valattr, szval + 2);
 	}
 }
 
@@ -300,7 +300,7 @@ void extr_dir(struct recentry **phead, size_t pos, bool root)
 
 		/* copy name */
 		len = strlen(ent->d_name);
-		addpath(pos,  ent->d_name, 1 + len);
+		addpath(pos, ent->d_name, len + 1);
 
 		/* extract the entry */
 		extr_entry(phead, pos, len);
