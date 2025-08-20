@@ -178,11 +178,16 @@ void main(int ac, char **av)
 	}
 #else
 	/* check argument count */
-	if (ac == 4 && strcmp(av[1], "-d") == 0) {
-		apply = dry_apply;
-		av++;
+	if (ac > 1 && strcmp(av[1], "-d") == 0) {
+		if (ac != 4)
+			ac = 1;
+		else {
+			apply = dry_apply;
+			av++;
+			ac = 3;
+		}
 	}
-	else if (ac != 3) {
+	if (ac != 3) {
 		fprintf(stderr, "usage: %s [-d] FILE ROOT\n", av[0]);
 		exit(EXIT_FAILURE);
 	}
