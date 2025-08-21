@@ -41,10 +41,13 @@
 char path[PATH_MAX];
 
 #if WITHOUT_DRY_RUN
+#undef WITH_DRY_RUN
+#elif !WITH_DRY_RUN
+#define WITH_DRY_RUN 1
+#endif
 
-# define APPLY lsetxattr
 
-#else
+#if WITH_DRY_RUN
 
 # define APPLY apply
 
@@ -55,6 +58,10 @@ int dry_apply(const char *path, const char *name, const void *value, size_t size
 {
 	fprintf(stdout, "%s\t%s\t%.*s\n", path, name, (int)size, (const char*)value);
 }
+
+#else
+
+# define APPLY lsetxattr
 
 #endif
 
@@ -166,38 +173,37 @@ void *mapin(const char *path)
 	return (void*)(((char*)ptr) + strlen(SEC_XATTR_CP_ID_V1));
 }
 
+void usage(char **av)
+{
+	fprintf(stderr, "usage: %s"
+#if WITH_DRY_RUN
+		" [-d]"
+#endif
+		" FILE ROOT\n" , av[0]);
+	exit(EXIT_FAILURE);
+}
+
 void main(int ac, char **av)
 {
 	uint32_t *ptr;
+	int i0 = 1;
 
-#if WITHOUT_DRY_RUN
-	/* check argument count */
-	if (ac != 3) {
-		fprintf(stderr, "usage: %s FILE ROOT\n", av[0]);
-		exit(EXIT_FAILURE);
-	}
-#else
-	/* check argument count */
+#if WITH_DRY_RUN
 	if (ac > 1 && strcmp(av[1], "-d") == 0) {
-		if (ac != 4)
-			ac = 1;
-		else {
-			apply = dry_apply;
-			av++;
-			ac = 3;
-		}
-	}
-	if (ac != 3) {
-		fprintf(stderr, "usage: %s [-d] FILE ROOT\n", av[0]);
-		exit(EXIT_FAILURE);
+		apply = dry_apply;
+		i0++;
 	}
 #endif
 
+	/* check argument count */
+	if (ac != i0 + 2)
+		usage(av);
+
 	/* map the file */
-	ptr = mapin(av[1]);
+	ptr = mapin(av[i0]);
 
 	/* process the root */
-	process(ptr, 0, av[2]);
+	process(ptr, 0, av[i0 + 1]);
 
 	exit(EXIT_SUCCESS);
 }
