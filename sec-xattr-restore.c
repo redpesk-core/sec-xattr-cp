@@ -40,12 +40,21 @@
 
 char path[PATH_MAX];
 
+#if WITHOUT_EXEC
+#undef WITH_EXEC
+#elif !WITH_EXEC
+#define WITH_EXEC 1
+#endif
+
 #if WITHOUT_DRY_RUN
 #undef WITH_DRY_RUN
 #elif !WITH_DRY_RUN
 #define WITH_DRY_RUN 1
 #endif
 
+#if WITH_EXEC
+extern char **environ;
+#endif
 
 #if WITH_DRY_RUN
 
@@ -179,7 +188,11 @@ void usage(char **av)
 #if WITH_DRY_RUN
 		" [-d]"
 #endif
-		" FILE ROOT\n" , av[0]);
+		" FILE ROOT"
+#if WITH_EXEC
+		" [program [arg ...]]"
+#endif
+		"\n" , av[0]);
 	exit(EXIT_FAILURE);
 }
 
@@ -196,7 +209,11 @@ void main(int ac, char **av)
 #endif
 
 	/* check argument count */
+#if WITH_EXEC
+	if (ac < i0 + 2)
+#else
 	if (ac != i0 + 2)
+#endif
 		usage(av);
 
 	/* map the file */
@@ -205,6 +222,14 @@ void main(int ac, char **av)
 	/* process the root */
 	process(ptr, 0, av[i0 + 1]);
 
+#if WITH_EXEC
+	i0 += 2;
+	if (ac > i0) {
+		execve(av[i0], &av[i0], environ);
+		fprintf(stderr, "can't exec %s: %s\n", av[i0], strerror(errno));
+		exit(EXIT_FAILURE);
+	}
+#endif
 	exit(EXIT_SUCCESS);
 }
 

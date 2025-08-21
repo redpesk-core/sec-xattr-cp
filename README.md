@@ -29,12 +29,15 @@ The option `-d`dumps out the extracted attributes.
 The program `sec-xattr-restore`:
 
 ```
-sec-xattr-rectore [-d] IN-FILE ROOT-DIR
+sec-xattr-rectore [-d] IN-FILE ROOT-DIR [program [arg ...]]
 ```
 
 Set the extended attributes extracted in `IN-FILE` to files at `ROOT-DIR`.
 
 The option '-d' is a dump out dry run of the process.
+
+When program is given, on success, the restorer executes it,
+calling it with its optional arguments.
 
 
 ## Format of the file recording the labels
