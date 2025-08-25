@@ -429,7 +429,7 @@ void set_pattern(const char *pat)
 
 void usage(char **av)
 {
-	printf("usage: %s [-d] [-m pattern] FILE ROOT\n");
+	printf("usage: %s [-d] [-m pattern] FILE ROOT\n", av[0]);
 	exit(EXIT_FAILURE);
 }
 
