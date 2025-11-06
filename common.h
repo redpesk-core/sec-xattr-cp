@@ -20,7 +20,10 @@
  *  https://www.gnu.org/licenses/gpl-3.0.html.
  * $RP_END_LICENSE$
  */
+#pragma once
 
+#include <stddef.h>
+#include <stdio.h>
 
 #define SEC_XATTR_CP_ID_V1 "sec-xattr-cp 1\n\n"
 
@@ -31,3 +34,49 @@
 #define TAG_ATTR  2
 #define TAG_SET   3
 
+/* record a string */
+struct recstr {
+	size_t size;        /* size of the string without zero */
+	struct recstr *nxt; /* next string record */
+	size_t offset;      /* final offset in file */
+	char value[];       /* the string terminated with a zero */
+};
+
+/* record the setting of an attribute */
+struct recattr {
+	struct recattr *nxt;   /* next setting for the same entry */
+	struct recstr  *name;  /* string for the name of the attribute */
+	struct recstr  *value; /* string for the value of the attribute */
+};
+
+/* record the setting for an entry */
+struct recentry {
+	struct recstr   *name; /* string for the name of the entry */
+	struct recentry *nxt;  /* next entry */
+	struct recattr  *attr; /* list of attributes if any */
+	struct recentry *subs; /* list of entries for directories */
+};
+
+
+struct recstr *add_recstr(struct recstr **pstrings, const char *value, size_t sz);
+
+struct recstr *add_recval(struct recstr **pstrings, const char *value, size_t sz);
+
+void add_recattr(struct recattr **pattrs, struct recstr **pstrings, const char *name, size_t lenname, const char *value, size_t lenvalue);
+
+
+struct recentry *add_recentry(struct recentry **pentries, struct recstr **pstrings, const char *str, size_t len);
+
+
+void write_attr_file(const char *path, struct recentry *root, struct recstr *strings);
+
+
+void printstr(FILE *file, const char *value, size_t lenvalue);
+
+void dump_entry(FILE *file, const char *path, const char *name, const void *value, size_t size);
+
+size_t unescape(char *buffer, size_t len);
+
+void *mapin(const char *path);
+
+void apply_attr_file(const char *path, const char *prefix, int (*apply)(const char *path, const char *name, const void *value, size_t size, int flags));

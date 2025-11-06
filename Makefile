@@ -1,4 +1,4 @@
-.PHONY: all install
+.PHONY: all install clean
 
 all: sec-xattr-restore sec-xattr-extract sec-xattr-debug
 
@@ -7,14 +7,18 @@ exec_prefix ?= $(prefix)
 bindir ?= $(exec_prefix)/bin
 INSTALL ?= install
 
-sec-xattr-extract: sec-xattr-extract.c common.h
-	$(CC) $(CFLAGS) -o $@ $<
+sec-xattr-extract: sec-xattr-extract.o common.o common.h
+	$(CC) $(CFLAGS) -o $@ sec-xattr-extract.o common.o
 
-sec-xattr-restore: sec-xattr-restore.c common.h
-	$(CC) $(CFLAGS) -o $@ $<
+sec-xattr-restore: sec-xattr-restore.o common.o common.h
+	$(CC) $(CFLAGS) -o $@ sec-xattr-restore.o common.o
 
-sec-xattr-debug: sec-xattr-debug.c common.h
-	$(CC) $(CFLAGS) -o $@ $<
+sec-xattr-debug: sec-xattr-debug.o common.o common.h
+	$(CC) $(CFLAGS) -o $@ sec-xattr-debug.o common.o
 
+
+
+clean:
+	rm $(ALL) *.o
 install: sec-xattr-restore sec-xattr-extract
 	$(INSTALL) -D -t $(DESTDIR)$(bindir) sec-xattr-extract sec-xattr-restore

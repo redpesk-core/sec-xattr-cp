@@ -9,4 +9,4 @@ out.rest.dump
 sec-xattr-extract
 sec-xattr-restore
 sec-xattr-debug
-
+*.o
