@@ -44,6 +44,8 @@ calling it with its optional arguments.
 
 The file contains 3 sections: ID CODE STRINGS
 
+The program sec-xattr-debug can dump it.
+
 ### Section ID
 
 The ID section is 16 bytes long (alignment on 4 bytes boundary
