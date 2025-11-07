@@ -39,7 +39,7 @@
 #include <sys/xattr.h>
 #include <regex.h>
 
-#include "sec-xattr-cp.h"
+#include "common.h"
 
 /* record a string */
 struct recstr {

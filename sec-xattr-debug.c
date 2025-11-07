@@ -36,7 +36,7 @@
 #include <sys/types.h>
 #include <sys/xattr.h>
 
-#include "sec-xattr-cp.h"
+#include "common.h"
 
 uint32_t *base;
 char spaces[] = "                              "
