@@ -92,8 +92,8 @@ and the pointer to the DATA for a code pointed by PCODE
 
 The data is of to types: STRINGZ or BUFFER.
 
-STRINGZ are zero terminated strings UTF8 encoded. It is in use
-for operation SUB, FILE and ATTR. That string can be retrived using the
+STRINGZ are zero terminated UTF8 encoded strings. It is in use
+for operation SUB, FILE and ATTR. That string can be retrieved using the
 below C code:
 
 ```C
