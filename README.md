@@ -39,6 +39,23 @@ The option '-d' is a dump out dry run of the process.
 When program is given, on success, the restorer executes it,
 calling it with its optional arguments.
 
+## Building extended attributes
+
+The program `sec-xattr-build`:
+
+```
+sec-xattr-build OUT-FILE
+```
+
+It reads from its standard input lines having 3 fields separated by spaces or tabs.
+Each line has 3 items separated by spaces or tabs:
+
+- filename,
+- attribute-name
+- attribute-value
+
+The lines are read as bytes and bytes out of the range 33 .. 126, except for for item separators
+(32 or 9) and line separators (10), must be escaped using octal '\xxx' (ex: space -> \040).
 
 ## Format of the file recording the labels
 
