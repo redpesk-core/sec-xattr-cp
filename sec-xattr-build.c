@@ -153,10 +153,8 @@ void usage(char **av)
 	exit(EXIT_FAILURE);
 }
 
-void main(int ac, char **av)
+int main(int ac, char **av)
 {
-	int idx = 1;
-
 	/* check argument count */
 	if (2 != ac)
        		usage(av);
@@ -167,6 +165,6 @@ void main(int ac, char **av)
 	/* write */
 	write_attr_file(av[1], root, recstrs);
 
-	exit(EXIT_SUCCESS);
+	return(EXIT_SUCCESS);
 }
 

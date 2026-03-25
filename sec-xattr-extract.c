@@ -24,6 +24,7 @@
 #include "common.h"
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
@@ -153,7 +154,7 @@ void extr_dir(struct recentry **pentries, size_t pos, bool root)
 		addpath(pos++, "/", 1);
 
 	/* loop on each entry */
-	while (ent = readdir(dir)) {
+	while ((ent = readdir(dir)) != NULL) {
 
 		/* length of file */
 
@@ -221,7 +222,7 @@ void usage(char **av)
 	exit(EXIT_FAILURE);
 }
 
-void main(int ac, char **av)
+int main(int ac, char **av)
 {
 	int idx = 1;
 
@@ -246,6 +247,6 @@ void main(int ac, char **av)
 	/* write */
 	write_attr_file(av[idx], root, recstrs);
 
-	exit(EXIT_SUCCESS);
+	return(EXIT_SUCCESS);
 }
 

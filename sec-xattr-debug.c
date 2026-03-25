@@ -49,7 +49,7 @@ void *process(uint32_t *pcode, unsigned depth, size_t offset, const char *subpat
 
 	const char *str;
 	uint32_t code;
-	int rc, tag, off, dep;
+	int tag, off, dep;
 	size_t len;
 
 	/* append the subpath */
@@ -93,7 +93,7 @@ void *process(uint32_t *pcode, unsigned depth, size_t offset, const char *subpat
 		case TAG_FILE:
 			len = strlen(str) + 1;
 			if (offset + len > sizeof path) {
-				fprintf(stderr, "path too long %.*s%s\n", (int)offset, path, offset);
+				fprintf(stderr, "path too long %.*s%s\n", (int)offset, path, str);
 				exit(EXIT_FAILURE);
 			}
 			memcpy(&path[offset], str, len);
@@ -107,17 +107,13 @@ void *process(uint32_t *pcode, unsigned depth, size_t offset, const char *subpat
 			break;
 		case TAG_SET:
 			len = ((size_t)(uint8_t)str[0]) | (((size_t)(uint8_t)str[1]) << 8);
-			fprintf(stdout, "SET  %d=%d %d %.*s\n", off, dep, (int)len, len, &str[2]);
-			if (rc < 0) {
-				fprintf(stderr, "can't set %s of %s\n", attr, path);
-				exit(EXIT_FAILURE);
-			}
+			fprintf(stdout, "SET  %d=%d %d %.*s\n", off, dep, (int)len, (int)len, &str[2]);
 			break;
 		}
 	}
 }
 
-void main(int ac, char **av)
+int main(int ac, char **av)
 {
 
 	/* check argument count */
@@ -132,6 +128,6 @@ void main(int ac, char **av)
 	/* process the root */
 	process(base, 0, 0, av[2]);
 
-	exit(EXIT_SUCCESS);
+	return(EXIT_SUCCESS);
 }
 

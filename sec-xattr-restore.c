@@ -43,7 +43,7 @@ void usage(char **av)
 	exit(EXIT_FAILURE);
 }
 
-void main(int ac, char **av)
+int main(int ac, char **av)
 {
 	int i0 = 1;
 	int (*apply)(const char *path, const char *name, const void *value, size_t size, int flags)
@@ -69,6 +69,6 @@ void main(int ac, char **av)
 	/* execute the given command */
 	execve(av[i0], &av[i0], environ);
 	fprintf(stderr, "can't exec %s: %s\n", av[i0], strerror(errno));
-	exit(EXIT_FAILURE);
+	return(EXIT_FAILURE);
 }
 
