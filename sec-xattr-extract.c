@@ -218,7 +218,8 @@ void set_pattern(const char *pat)
 
 void usage(char **av)
 {
-	printf("usage: %s [-d] [-m pattern] FILE ROOT\n", av[0]);
+	fprintf(stderr, "%s version %s\n", av[0], VERSION);
+	fprintf(stderr, "usage: %s [-d] [-m pattern] FILE ROOT\n", av[0]);
 	exit(EXIT_FAILURE);
 }
 

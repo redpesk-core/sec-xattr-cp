@@ -118,6 +118,7 @@ int main(int ac, char **av)
 
 	/* check argument count */
 	if (ac != 3) {
+		fprintf(stderr, "%s version %s\n", av[0], VERSION);
 		fprintf(stderr, "usage: %s FILE ROOT\n", av[0]);
 		exit(EXIT_FAILURE);
 	}

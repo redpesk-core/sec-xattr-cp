@@ -1,6 +1,6 @@
 .PHONY: all install clean
 
-CFLAGS += -Wall
+CFLAGS += -Wall -DVERSION='"1.4"'
 
 prefix ?= /usr/local
 exec_prefix ?= $(prefix)

@@ -39,6 +39,7 @@ int dry_apply(const char *path, const char *name, const void *value, size_t size
 
 void usage(char **av)
 {
+	fprintf(stderr, "%s version %s\n", av[0], VERSION);
 	fprintf(stderr, "usage: %s [-d] FILE ROOT [program [arg ...]]\n" , av[0]);
 	exit(EXIT_FAILURE);
 }

@@ -149,7 +149,8 @@ void build(FILE *file)
 
 void usage(char **av)
 {
-	printf("usage: %s FILE\n", av[0]);
+	fprintf(stderr, "%s version %s\n", av[0], VERSION);
+	fprintf(stderr, "usage: %s FILE\n", av[0]);
 	exit(EXIT_FAILURE);
 }
 
